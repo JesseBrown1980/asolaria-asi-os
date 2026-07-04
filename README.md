@@ -38,7 +38,15 @@ The OS surface runs on its own. To light up the rest of the strip you run the fa
 - **8-byte host (host8)** — the Rust kernel (`:5088`) with content-addressed **stubbed rooms** that spin up on demand.
 - **Hilbra** — the shared-key HBI/HBP transport that lets nodes cross-search with keys that stay off the wire.
 
-The OS auto-detects whichever of these are listening and lights their tile. Companion repos live on this GitHub account (**[Hilbra](https://github.com/JesseBrown1980/Hilbra)** and the Asolaria fabric repos).
+The OS auto-detects whichever of these are listening and lights their tile.
+
+**To run all of it in one command** — the OS *plus* recall *plus* the 8-byte host, under your own key — use the full-node installer (details in **[FABRIC-NODE.md](FABRIC-NODE.md)**):
+
+```sh
+sh scripts/install-full-node.sh      # Windows:  powershell -ExecutionPolicy Bypass -File scripts\install-full-node.ps1
+```
+
+The engines are already public: **[asolaria-federation-1024](https://github.com/JesseBrown1980/asolaria-federation-1024)** (recall-serve, host8-serve, kernel, agent-runtime, stubbed rooms — 17 crates) · **[Hilbra](https://github.com/JesseBrown1980/Hilbra)** (the Asolaria-internet protocol) · **[asolaria-behcs-256](https://github.com/JesseBrown1980/asolaria-behcs-256)** (the glyph substrate). The full-node installer clones + builds them for you; your corpus starts empty and is never published.
 
 ## Autostart (optional)
 
