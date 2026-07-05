@@ -84,7 +84,12 @@ fn handle(mut stream: TcpStream) -> std::io::Result<()> {
             let html = INDEX_HTML
                 .replace("__ASOLARIA_SEAT__", &seat_name())
                 .replace("__ASOLARIA_PID__", &seat_pid());
-            write_resp(&mut stream, 200, "text/html; charset=utf-8", html.as_bytes())
+            write_resp(
+                &mut stream,
+                200,
+                "text/html; charset=utf-8",
+                html.as_bytes(),
+            )
         }
         ("GET", "/health") => write_resp(&mut stream, 200, "text/plain", b"ok"),
         ("GET", "/api/live") => {
@@ -151,7 +156,10 @@ fn launch_windows_env() -> String {
     if std::path::Path::new(sandbox).exists() && Command::new(sandbox).spawn().is_ok() {
         return "launched Windows Sandbox — a clean Windows env in its own window".into();
     }
-    match Command::new("explorer.exe").arg("shell:MyComputerFolder").spawn() {
+    match Command::new("explorer.exe")
+        .arg("shell:MyComputerFolder")
+        .spawn()
+    {
         Ok(_) => "launched Windows — host desktop / Explorer as a window".into(),
         Err(e) => format!("could not launch Windows env: {e}"),
     }
@@ -230,9 +238,9 @@ fn spawn_session(shell: &str) -> u64 {
             sessions().lock().unwrap().insert(id, sess);
         }
         Err(e) => {
-            out.lock()
-                .unwrap()
-                .extend_from_slice(format!("[asi-os] could not spawn '{shell}': {e}\r\n").as_bytes());
+            out.lock().unwrap().extend_from_slice(
+                format!("[asi-os] could not spawn '{shell}': {e}\r\n").as_bytes(),
+            );
             let sess = Arc::new(Session {
                 stdin: Mutex::new(None),
                 out,
@@ -424,7 +432,8 @@ fn read_ident(env_key: &str, file: &str, default: &str) -> String {
 fn http_get(host: &str, port: u16, path: &str, timeout_ms: u64) -> Option<String> {
     let addr: std::net::SocketAddr = format!("{host}:{port}").parse().ok()?;
     let mut s = TcpStream::connect_timeout(&addr, Duration::from_millis(timeout_ms)).ok()?;
-    s.set_read_timeout(Some(Duration::from_millis(timeout_ms))).ok()?;
+    s.set_read_timeout(Some(Duration::from_millis(timeout_ms)))
+        .ok()?;
     let req = format!("GET {path} HTTP/1.1\r\nHost: {host}\r\nConnection: close\r\n\r\n");
     s.write_all(req.as_bytes()).ok()?;
     let mut buf = Vec::new();
