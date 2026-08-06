@@ -1,5 +1,17 @@
 # Asolaria ASI OS
 
+## Toolchain rule (operator, global — no exceptions)
+
+**Rust 1.81 with clippy. Integer arithmetic and ternary (trits) only — never float.**
+
+Pinned in `rust-toolchain.toml` (`channel = "1.81.0"`, `components = ["clippy", "rustfmt"]`),
+declared as `rust-version = "1.81"` in every `Cargo.toml`, and enforced in CI by
+`cargo clippy --all-targets -- -D warnings` plus a hard grep that fails the build on any
+`f32`/`f64` in `src/` or `tests/`.
+
+Any receipt in this repository naming a toolchain other than 1.81 records a run made outside
+the rule. It is retained as history, not as the toolchain of record.
+
 A tiny, self-contained **operating-system front-end** you build from source and run on your own machine — the same surface the Asolaria fabric runs on. Pure Rust `std`, **zero external crates**, ~400 lines. It serves a full-screen web UI on `http://127.0.0.1:4600` with real interactive shells, a live status strip for your local fabric, and a "Windows-as-a-window" tile.
 
 You become an **Asolaria fabric participant**: you mint your **own local secret key** (it never leaves your machine), run the OS surface, and — as you bring up the fabric daemons — use **Hilbra** (the shared-key HBI/HBP layer), **recall** (a local inverted-index vault), and the **8-byte-host** kernel with its stubbed rooms, exactly like a full node.
@@ -60,7 +72,7 @@ The engines are already public: **[asolaria-federation-1024](https://github.com/
 
 ## Requirements
 
-- Rust ≥ 1.75 (`rustup`). Zero other dependencies — `cargo build` works fully offline.
+- Rust ≥ 1.81 (`rustup`). Zero other dependencies — `cargo build` works fully offline.
 - Linux, macOS, or Windows. Cross-compiles to a Linux target for bare-metal Asolaria-on-metal.
 
 ## License
